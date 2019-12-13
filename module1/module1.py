@@ -67,24 +67,6 @@ def SortLinesList(lines):
     return horizontal, vertical
 
 # def hough_transform_p(image, template, tableCnt):
-#     # open and process images
-#     img = cv2.imread('imgs/'+image)
-#     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#     edges = cv2.Canny(gray, 50, 150, apertureSize=3)
-#
-#     # probabilistic hough transform
-#     lines = cv2.HoughLinesP(edges, 1, np.pi/180, 200, minLineLength=20, maxLineGap=999)[0].tolist()
-#
-#     # remove duplicates
-#     lines = remove_duplicates(lines)
-#
-#     # draw image
-#     for x1, y1, x2, y2 in lines:
-#         cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 1)
-#
-#     # sort lines into vertical & horizontal lists
-#     horizontal, vertical = sort_line_list(lines)
-#
 #     # go through each horizontal line (aka row)
 #     rows = []
 #     for i, h in enumerate(horizontal):
@@ -113,12 +95,12 @@ def SortLinesList(lines):
 #                 if not os.path.exists(dir):
 #                     os.makedirs(dir)
 #                 fn = '%s/roi_r%s-c%s.png' % (dir, i, j)
-#                 cv2.imwrite(fn, roi)
+#                 cv.imwrite(fn, roi)
 #
 #                 # if roi contains an x, add x to array, else add _
-#                 roi_gry = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-#                 ret, thresh = cv2.threshold(roi_gry, 127, 255, 0)
-#                 contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+#                 roi_gry = cv.cvtColor(roi, cv.COLOR_BGR2GRAY)
+#                 ret, thresh = cv.threshold(roi_gry, 127, 255, 0)
+#                 contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 #
 #                 if len(contours) > 1:
 #                     # there is an x for 2 or more contours
@@ -131,7 +113,7 @@ def SortLinesList(lines):
 #
 #     # save image (for testing)
 #     fn = os.path.splitext(image)[0] + '-hough_p.png'
-#     cv2.imwrite('imgs/'+fn, img)
+#     cv.imwrite('imgs/'+fn, img)
 #
 #
 # def process(images):
@@ -146,37 +128,115 @@ def FixList(list):
     return newList
 
 def Closing(img):
-    SE = np.ones((3,3), np.uint8)
-    ret, img = cv.threshold(img, 127, 255, cv.THRESH_BINARY)
+    SE = np.ones((5, 5), np.uint8)
+    SE2 = np.ones((3, 3), np.uint8)
+    ret, img = cv.threshold(img, 70, 255, cv.THRESH_BINARY)
     img = cv.dilate(img, SE)
     img = cv.erode(img, SE)
+    img = cv.dilate(img, SE)
     return img
 
-def HoughLinesManual(pic):
-    img = pic.copy()
-    canny_img = cv.Canny(img, 75, 350)
-
-    linesTemp = cv.HoughLines(canny_img, 1, np.pi / 180.0, 270)
-    lines = FixList(linesTemp)
-    print(len(lines))
-
-    RemoveDuplicates(lines)
-    print(len(lines))
-
-    hLines, vLines = SortLinesList(lines)
-
+def AddLines(lines, img):
     if lines is not None:
         for rho, theta in lines:
             a = math.cos(theta)
             b = math.sin(theta)
             x0 = a * rho
             y0 = b * rho
-            print("line at (x,y) = (", x0, ", ", y0, ") has rho, theta = ", rho, theta)
+            #print("line at (x,y) = (", x0, ", ", y0, ") has rho, theta = ", rho, theta)
             pt1 = (int(x0 + 1000 * (-b)), int(y0 + 1000 * (a)))
             pt2 = (int(x0 - 1000 * (-b)), int(y0 - 1000 * (a)))
-            cv.line(img, pt1, pt2, (0, 0, 255), 1, cv.LINE_AA)
+            cv.line(img, pt1, pt2, (0, 0, 255), 3, cv.LINE_AA)
 
-    cv.imshow("Detected Lines", ResizeImage(img, height=800))
+    return lines, img
+
+def HoughLinesManual(pic):
+    img = pic.copy()
+    imgCopy = pic.copy()
+
+    # get canny edge image
+    canny_img = cv.Canny(img, 50, 350)
+
+    # get hough lines
+    linesTemp = cv.HoughLines(canny_img, 1, np.pi / 180.0, 270)
+
+    # just changing data structure
+    lines = FixList(linesTemp)
+
+    # removing duplicate hough lines
+    RemoveDuplicates(lines)
+
+    # seperating lines into vertical and horizontal
+    hLines, vLines = SortLinesList(lines)
+
+    # add hough lines to the original image
+    lines, img = AddLines(lines, img)
+
+
+    # rows = []
+    # for i, h in enumerate(hLines):
+    #     if i < len(hLines)-1:
+    #         row = []
+    #         for j, v in enumerate(vLines):
+    #             if i < len(hLines)-1 and j < len(vLines)-1:
+    #                 # every cell before last cell
+    #                 # get width & height
+    #                 width = hLines[i+1][1] - h[1]
+    #                 height = vLines[j+1][0] - v[0]
+    #
+    #             else:
+    #                 # last cell, width = cell start to end of image
+    #                 # get width & height
+    #                 width = tW
+    #                 height = tH
+    #             tW = width
+    #             tH = height
+    #
+    #             # get roi (region of interest) to find an x
+    #             roi = img[h[1]:h[1]+width, v[0]:v[0]+height]
+    #
+    #             # save image (for testing)
+    #             dir = 'imgs/table%s' % (tableCnt+1)
+    #             if not os.path.exists(dir):
+    #                 os.makedirs(dir)
+    #             fn = '%s/roi_r%s-c%s.png' % (dir, i, j)
+    #             cv.imwrite(fn, roi)
+    #
+    #             # if roi contains an x, add x to array, else add _
+    #             roi_gry = cv.cvtColor(roi, cv.COLOR_BGR2GRAY)
+    #             ret, thresh = cv.threshold(roi_gry, 127, 255, 0)
+    #             contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    #
+    #             if len(contours) > 1:
+    #                 # there is an x for 2 or more contours
+    #                 row.append('x')
+    #             else:
+    #                 # there is no x when len(contours) is <= 1
+    #                 row.append('_')
+    #         row.pop()
+    #         rows.append(row)
+
+    # close image to eliminate text and thin lines, hence you get
+    # only white blocks separated by black hough lines
+    closed_binary_image = Closing(img)
+
+    # find contours in the image
+    contours, hierachy = cv.findContours(closed_binary_image, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+
+    imgCopy = cv.drawContours(imgCopy, contours, -1, (255, 255, 255), 1)
+
+    for i, contour in enumerate(contours):
+        x, y, w, h = cv.boundingRect(contour)
+        cv.rectangle(imgCopy, (x, y), (x + w, y + h), (255, 255, 255), 1)
+        # Crop the result
+        final_image = imgCopy[y:y + h + 1, x:x + w + 1]
+        # make directory imgs
+        dir = 'imgs/'
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        fn = '%s/cell%s.png' % (dir, i)
+        cv.imwrite(fn, final_image)
+
 
 
 # __main__
