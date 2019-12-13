@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/module1.py" line="118" mnemonic="9" />
-  </component>
   <component name="ChangeListManager">
-    <list default="true" id="567f72b1-2fa7-4fcf-81bb-ef4ae4eab924" name="Default Changelist" comment="" />
+    <list default="true" id="46a06ade-f4cb-4221-b162-8203b66342bd" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/11.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/dataset_module1/11.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/12.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataset_module1/9.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/module1.py" beforeDir="false" afterPath="$PROJECT_DIR$/module1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/Activate.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/activate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/activate.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/deactivate.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/python.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/python_d.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/pythonw.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/pythonw_d.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/pyvenv.cfg" beforeDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,20 +34,19 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/module1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="115" lean-forward="true" selection-start-line="115" selection-end-line="115" />
+            <state relative-caret-position="188">
+              <caret line="173" column="87" selection-start-line="173" selection-start-column="87" selection-end-line="173" selection-end-column="87" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#109#372#0" />
-                <element signature="e#454#1158#0" />
-                <element signature="e#787#1115#0" />
-                <element signature="e#1000#1051#0" />
-                <element signature="e#4591#4676#0" />
-                <element signature="e#4058#4289#0" />
+                <element signature="e#91#351#0" />
+                <element signature="e#435#1246#0" />
+                <element signature="e#767#997#0" />
+                <element signature="e#999#1050#0" />
+                <element signature="e#3783#3868#0" />
+                <element signature="e#3892#4054#0" />
               </folding>
             </state>
           </provider>
@@ -40,6 +61,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -47,11 +71,12 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="952" />
-    <option name="width" value="977" />
-    <option name="height" value="1038" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="950" />
+    <option name="width" value="980" />
+    <option name="height" value="1040" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -72,8 +97,8 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.editor" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -120,32 +145,32 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="567f72b1-2fa7-4fcf-81bb-ef4ae4eab924" name="Default Changelist" comment="" />
-      <created>1576175157918</created>
+      <changelist id="46a06ade-f4cb-4221-b162-8203b66342bd" name="Default Changelist" comment="" />
+      <created>1576226864863</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1576175157918</updated>
+      <updated>1576226864863</updated>
     </task>
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="762" y="0" width="781" height="830" extended-state="0" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10067114" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Python Console" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.25178826" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32956153" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -154,16 +179,15 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/module1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="115" lean-forward="true" selection-start-line="115" selection-end-line="115" />
+        <state relative-caret-position="188">
+          <caret line="173" column="87" selection-start-line="173" selection-start-column="87" selection-end-line="173" selection-end-column="87" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#109#372#0" />
-            <element signature="e#454#1158#0" />
-            <element signature="e#787#1115#0" />
-            <element signature="e#1000#1051#0" />
-            <element signature="e#4591#4676#0" />
-            <element signature="e#4058#4289#0" />
+            <element signature="e#91#351#0" />
+            <element signature="e#435#1246#0" />
+            <element signature="e#767#997#0" />
+            <element signature="e#999#1050#0" />
+            <element signature="e#3783#3868#0" />
+            <element signature="e#3892#4054#0" />
           </folding>
         </state>
       </provider>

@@ -4,7 +4,7 @@ import math
 import os
 
 
-def readImages(directory):
+def ReadImages(directory):
     fnames = os.listdir(directory)
     to_return = []
     for fn in fnames:
@@ -14,18 +14,49 @@ def readImages(directory):
 
     return to_return
 
-def remove_duplicates(lines):
+def ResizeImage(image, width = None, height = None, inter = cv.INTER_AREA):
+    # initialize the dimensions of the image to be resized and
+    # grab the image size
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # if both the width and height are None, then return the
+    # original image
+    if width is None and height is None:
+        return image
+
+    # check to see if the width is None
+    if width is None:
+        # calculate the ratio of the height and construct the
+        # dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+
+    # otherwise, the height is None
+    else:
+        # calculate the ratio of the width and construct the
+        # dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # resize the image
+    resized = cv.resize(image, dim, interpolation=inter)
+
+    # return the resized image
+    return resized
+
+def RemoveDuplicates(lines):
     for i, (rho, theta) in enumerate(lines):
         for j, (rho2, theta2) in enumerate(lines):
             if j == i:
                 continue
             deltaRho = abs(abs(rho) - abs(rho2))
             deltaTheta = abs(abs(theta) - abs(theta2))
-            if deltaRho < 20 and deltaTheta < 35.0/180.0:
+            if deltaRho < 15 and deltaTheta < 25.0/180.0:
                 del lines[j]
     return lines
 
-def sort_line_list(lines):
+def SortLinesList(lines):
     vertical = []
     horizontal = []
     for rho, theta in lines:
@@ -123,32 +154,32 @@ def Closing(img):
 
 def HoughLinesManual(pic):
     img = pic.copy()
-    canny_img = cv.Canny(img, 100, 350)
+    canny_img = cv.Canny(img, 75, 350)
 
-    linesTemp = cv.HoughLines(canny_img, 1, np.pi / 180.0, 280)
+    linesTemp = cv.HoughLines(canny_img, 1, np.pi / 180.0, 270)
     lines = FixList(linesTemp)
     print(len(lines))
 
-    remove_duplicates(lines)
+    RemoveDuplicates(lines)
     print(len(lines))
 
-    hLines, vLines = sort_line_list(lines)
+    hLines, vLines = SortLinesList(lines)
 
     if lines is not None:
         for rho, theta in lines:
-            print(rho, theta)
             a = math.cos(theta)
             b = math.sin(theta)
             x0 = a * rho
             y0 = b * rho
+            print("line at (x,y) = (", x0, ", ", y0, ") has rho, theta = ", rho, theta)
             pt1 = (int(x0 + 1000 * (-b)), int(y0 + 1000 * (a)))
             pt2 = (int(x0 - 1000 * (-b)), int(y0 - 1000 * (a)))
-            cv.line(img, pt1, pt2, (0, 0, 255), 3, cv.LINE_AA)
+            cv.line(img, pt1, pt2, (0, 0, 255), 1, cv.LINE_AA)
 
-    cv.imshow("Detected Lines", img)
+    cv.imshow("Detected Lines", ResizeImage(img, height=800))
 
 
 # __main__
-dataset = readImages(r'dataset_module1')
-HoughLinesManual(dataset[2][1])
+dataset = ReadImages(r'dataset_module1')
+HoughLinesManual(dataset[1][1])
 cv.waitKey()
