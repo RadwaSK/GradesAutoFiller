@@ -126,7 +126,6 @@ def HoughLinesManual(pic):
     contours = np.delete(contours, np.s_[0:5])
     avg_height = 27
     contours_info = []
-    y_max = -1
     w_min = 30
     w_max = 200
 
@@ -138,23 +137,18 @@ def HoughLinesManual(pic):
             continue
         if (h > avg_height+7 or h < avg_height - 7):
             continue
-
         contours_info.append([y, x, w, h])
-
-        if y > y_max:
-            y_max = y
 
     np.sort(contours_info)
 
-    imgCopy = cv.drawContours(imgCopy, contours, -1, (255, 255, 255), 2)
-    cv.imshow("contour image", ResizeImage(imgCopy, height=775))
-    temp_list = []
+    # imgCopy = cv.drawContours(imgCopy, contours, -1, (255, 255, 255), 2)
+    # cv.imshow("contour image", ResizeImage(imgCopy, height=775))
 
     folder_num = 34
     last_width = 0
     cnt = 0
 
-    for i, contour in enumerate(contours_info):
+    for contour in contours_info:
         y, x, w, h = contour
         cv.rectangle(imgCopy, (x, y), (x + w, y + h), (255, 255, 255), 1)
         # Crop the result
