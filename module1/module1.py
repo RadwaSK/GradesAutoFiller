@@ -66,61 +66,6 @@ def SortLinesList(lines):
             vertical.append((rho, theta))
     return horizontal, vertical
 
-# def hough_transform_p(image, template, tableCnt):
-#     # go through each horizontal line (aka row)
-#     rows = []
-#     for i, h in enumerate(horizontal):
-#         if i < len(horizontal)-1:
-#             row = []
-#             for j, v in enumerate(vertical):
-#                 if i < len(horizontal)-1 and j < len(vertical)-1:
-#                     # every cell before last cell
-#                     # get width & height
-#                     width = horizontal[i+1][1] - h[1]
-#                     height = vertical[j+1][0] - v[0]
-#
-#                 else:
-#                     # last cell, width = cell start to end of image
-#                     # get width & height
-#                     width = tW
-#                     height = tH
-#                 tW = width
-#                 tH = height
-#
-#                 # get roi (region of interest) to find an x
-#                 roi = img[h[1]:h[1]+width, v[0]:v[0]+height]
-#
-#                 # save image (for testing)
-#                 dir = 'imgs/table%s' % (tableCnt+1)
-#                 if not os.path.exists(dir):
-#                     os.makedirs(dir)
-#                 fn = '%s/roi_r%s-c%s.png' % (dir, i, j)
-#                 cv.imwrite(fn, roi)
-#
-#                 # if roi contains an x, add x to array, else add _
-#                 roi_gry = cv.cvtColor(roi, cv.COLOR_BGR2GRAY)
-#                 ret, thresh = cv.threshold(roi_gry, 127, 255, 0)
-#                 contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-#
-#                 if len(contours) > 1:
-#                     # there is an x for 2 or more contours
-#                     row.append('x')
-#                 else:
-#                     # there is no x when len(contours) is <= 1
-#                     row.append('_')
-#             row.pop()
-#             rows.append(row)
-#
-#     # save image (for testing)
-#     fn = os.path.splitext(image)[0] + '-hough_p.png'
-#     cv.imwrite('imgs/'+fn, img)
-#
-#
-# def process(images):
-#     for i, img in enumerate(images):
-#         # perform probabilistic hough transform on each image
-#         hough_transform_p(img, templates[0], i)
-
 def FixList(list):
     newList = []
     for item in list:
@@ -166,78 +111,68 @@ def HoughLinesManual(pic):
     # removing duplicate hough lines
     RemoveDuplicates(lines)
 
-    # seperating lines into vertical and horizontal
+    # separating lines into vertical and horizontal
     hLines, vLines = SortLinesList(lines)
 
     # add hough lines to the original image
     lines, img = AddLines(lines, img)
 
-
-    # rows = []
-    # for i, h in enumerate(hLines):
-    #     if i < len(hLines)-1:
-    #         row = []
-    #         for j, v in enumerate(vLines):
-    #             if i < len(hLines)-1 and j < len(vLines)-1:
-    #                 # every cell before last cell
-    #                 # get width & height
-    #                 width = hLines[i+1][1] - h[1]
-    #                 height = vLines[j+1][0] - v[0]
-    #
-    #             else:
-    #                 # last cell, width = cell start to end of image
-    #                 # get width & height
-    #                 width = tW
-    #                 height = tH
-    #             tW = width
-    #             tH = height
-    #
-    #             # get roi (region of interest) to find an x
-    #             roi = img[h[1]:h[1]+width, v[0]:v[0]+height]
-    #
-    #             # save image (for testing)
-    #             dir = 'imgs/table%s' % (tableCnt+1)
-    #             if not os.path.exists(dir):
-    #                 os.makedirs(dir)
-    #             fn = '%s/roi_r%s-c%s.png' % (dir, i, j)
-    #             cv.imwrite(fn, roi)
-    #
-    #             # if roi contains an x, add x to array, else add _
-    #             roi_gry = cv.cvtColor(roi, cv.COLOR_BGR2GRAY)
-    #             ret, thresh = cv.threshold(roi_gry, 127, 255, 0)
-    #             contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    #
-    #             if len(contours) > 1:
-    #                 # there is an x for 2 or more contours
-    #                 row.append('x')
-    #             else:
-    #                 # there is no x when len(contours) is <= 1
-    #                 row.append('_')
-    #         row.pop()
-    #         rows.append(row)
-
-    # close image to eliminate text and thin lines, hence you get
-    # only white blocks separated by black hough lines
     closed_binary_image = Closing(img)
 
     # find contours in the image
     contours, hierachy = cv.findContours(closed_binary_image, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 
-    imgCopy = cv.drawContours(imgCopy, contours, -1, (255, 255, 255), 1)
+    # Trying to get y coordinates of the last row
+    contours = np.delete(contours, np.s_[0:5])
+    avg_height = 27
+    contours_info = []
+    y_max = -1
+    w_min = 30
+    w_max = 200
 
-    for i, contour in enumerate(contours):
-        x, y, w, h = cv.boundingRect(contour)
+    # store x, y, w, h of contours
+    for cont in contours:
+        x, y, w, h = cv.boundingRect(cont)
+
+        if (w < w_min or w > w_max + 20):
+            continue
+        if (h > avg_height+7 or h < avg_height - 7):
+            continue
+
+        contours_info.append([y, x, w, h])
+
+        if y > y_max:
+            y_max = y
+
+    np.sort(contours_info)
+
+    imgCopy = cv.drawContours(imgCopy, contours, -1, (255, 255, 255), 2)
+    cv.imshow("contour image", ResizeImage(imgCopy, height=775))
+    temp_list = []
+
+    folder_num = 34
+    last_width = 0
+    cnt = 0
+
+    for i, contour in enumerate(contours_info):
+        y, x, w, h = contour
         cv.rectangle(imgCopy, (x, y), (x + w, y + h), (255, 255, 255), 1)
         # Crop the result
         final_image = imgCopy[y:y + h + 1, x:x + w + 1]
+        # check if name
+        if (folder_num <= 0):
+            break
         # make directory imgs
-        dir = 'imgs/'
+        dir = 'imgs/student%s' % folder_num
         if not os.path.exists(dir):
             os.makedirs(dir)
-        fn = '%s/cell%s.png' % (dir, i)
+        fn = '%s/cell%s.png' % (dir, cnt)
+        cnt += 1
         cv.imwrite(fn, final_image)
-
-
+        if last_width > 150:
+            folder_num -= 1
+            cnt = 0
+        last_width = w
 
 # __main__
 dataset = ReadImages(r'dataset_module1')
