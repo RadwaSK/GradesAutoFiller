@@ -50,7 +50,7 @@ def find_questions(rows,bubbles):
     n=1                     #number of questions in the largest row (1st row)
     for i in range (0,len(rows[0])-1):
         dff=bubbles[rows[0][i+1]][0]-bubbles[rows[0][i]][1]
-        if(abs(dff-mx)<0.1*mx):
+        if(abs(int(dff)-int(mx))<0.1*mx):
             n+=1
     ch=len(rows[0])//n          #number of choices for every question
 

@@ -5,7 +5,8 @@ from get_choices import *
 from get_questions import *
 from get_answers import *
 
-
+#####################################NOTE:
+# it raises error whencalculating mean or variance for empty Array
 
 print('Enter Directory path of papers: ')
 path = input()
@@ -36,10 +37,13 @@ for i in range(0,len(modelAns)):
 
 for ind in range(0,len(imagesList)):
     result = Correct(imagesList[ind],modelAns)
-    print(result)
-    Grades.write(ind+1,0,(ind+1))
-    for q in range(0,len(result)):
-        Grades.write(ind+1,q+1,(result[q]))
+    if result is None :
+        print ('There is some error in the input Image! ... Please use another image.')
+    else:
+#        print(result)
+        Grades.write(ind+1,0,(ind+1))
+        for q in range(0,len(result)):
+            Grades.write(ind+1,q+1,(result[q]))
 
 Out.save(str(Excel) + '.xls')
 
