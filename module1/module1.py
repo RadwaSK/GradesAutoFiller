@@ -365,6 +365,66 @@ def AddLines(lines, img):
 
     return lines, img
 
+def CheckCorrectOrDash(orig_img):
+    h, w = orig_img.shape
+    #threshold the image
+    ret, img = cv.threshold(orig_img, 150, 255, cv.THRESH_BINARY)
+
+    #divide it into two parts
+    left, right = img[:, 0:int(w / 2)], img[:, int(w / 2):w]
+    
+    #get canny edges in both halves
+    canny_left_img = cv.Canny(left, threshold1=50, threshold2=200)
+    if (canny_left_img is None):
+        return ''
+
+    canny_right_img = cv.Canny(right, threshold1=50, threshold2=200)
+    if (canny_right_img is None):
+        return ''
+
+    #get Hough lines in both parts
+    lines_left_temp = cv.HoughLinesP(canny_left_img, 1, np.pi / 25.0, 5)
+    if (lines_left_temp is None):
+        return ''
+    lines_left = FixList(lines_left_temp)
+    
+    lines_right_temp = cv.HoughLinesP(canny_right_img, 1, np.pi / 25.0, 5)
+    if (lines_right_temp is None):
+        return ''
+    lines_right = FixList(lines_right_temp)
+
+    # get max line in length in left image and right image
+    max_left_line = []
+    max_right_line = []
+    max_len_left = 0
+    max_len_right = 0
+
+    for x1, y1, x2, y2 in lines_left:
+        length = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        if length > max_len_left:
+            max_len_left = length
+            max_left_line = [x1, y1, x2, y2]
+        
+    for x1, y1, x2, y2 in lines_right:
+        length = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        if length > max_len_right:
+            max_len_right = length
+            max_right_line = [x1, y1, x2, y2]
+        
+    # check angle between two lines
+    x1, y1, x2, y2 = max_left_line[0], max_left_line[1], max_left_line[2], max_left_line[3]
+    ang1 = math.atan(float(y2 - y1) / (x2 - x1))
+    
+    x1, y1, x2, y2 = max_right_line[0], max_right_line[1], max_right_line[2], max_right_line[3]
+    ang2 = math.atan(float(y2 - y1) / (x2 - x1))
+    
+    if abs(ang1) < 0.2 and abs(ang2) < 0.2:
+        # cell is dash
+        return 'dash'
+    else:
+        # cell is correct
+        return 'correct'
+
 def ExtractCells(pic):
     img = pic.copy()
     imgCopy = pic.copy()
@@ -492,7 +552,13 @@ for i in range(0,folder_num):
 
             Num_written=Num_Classifier(file_name)
             if(Num_written == ""):
-                break
+                string = CheckCorrectOrDash(image)
+                if (string == 'dash'):
+                	Num_written = '0'
+                elif (string == 'correct':
+                	Num_written = '5'
+                else:
+                    break
             excel.write(i, max(j, 3), Num_written)
 
 
